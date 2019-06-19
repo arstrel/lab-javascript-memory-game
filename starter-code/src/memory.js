@@ -15,8 +15,8 @@ class MemoryGame {
 // for i from n−1 downto 1 do
 //      j ← random integer such that 0 ≤ j ≤ i
 //      exchange a[j] and a[i]
-  shuffleCards(cards) {
-    let shuffledDeck = [...cards]
+  shuffleCards() {
+    let shuffledDeck = [...this.cards]
     let currentIndex = shuffledDeck.length, temporaryValue, randomIndex;
 
     // While there remain elements to shuffle...

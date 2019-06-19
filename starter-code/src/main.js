@@ -29,39 +29,44 @@ var memoryGame = new MemoryGame(cards);
 //uncomment this^^^^^ to enable shuffling on load
 
 document.addEventListener("DOMContentLoaded", function(event) { 
-  var html = '';
-  memoryGame.cards.forEach(function (pic) {
-    html += '<div class="card" data-card-name="'+ pic.name +'">';
-    html += '  <div class="back" name="'+ pic.img +'"></div>';
-    html += '  <div class="front" style="background: url(img/'+ pic.img +') no-repeat"></div>';
-    html += '</div>';
-  });
+  
+  alert('no shuffled on load, but shuffled afterwards. uncomment line 28 to shuffle on first load')
 
   // Add all the div's to the HTML
-  document.querySelector('#memory_board').innerHTML = html;
+  document.querySelector('#memory_board').innerHTML = buildThePage();
+  attachEventListeners();
 
-  // Flip the card when clicked on
-  document.querySelectorAll('.back').forEach(function(card) {
-    card.onclick = function() {
-      // TODO: write some code here
+  function buildThePage() {
+    var html = '';
+    memoryGame.cards.forEach(function (pic) {
+      html += '<div class="card" data-card-name="'+ pic.name +'">';
+      html += '  <div class="back" name="'+ pic.img +'"></div>';
+      html += '  <div class="front" style="background: url(img/'+ pic.img +') no-repeat"></div>';
+      html += '</div>';
+    });
+    return html
+  }
+
+  function attachEventListeners() {
+    // Flip the card face front when clicked on
+    document.querySelectorAll('.back').forEach(function(card) {
+      card.onclick = function() {
       $(this).toggleClass('back front');
       $(this).next().toggleClass('front back')
-     
-    }
-  });
-  
+      }
+    });
+
   //adding clicked cards to pickedcards array
   document.querySelectorAll('.card').forEach(card => {
     card.onclick = function() {
     memoryGame.pickedCards.push(card);
-      
+  
+    //checking if picked cards are the same
   if(memoryGame.pickedCards.length == 2) {
     $('.card').addClass('blocked');
     memoryGame.checkIfPair()
-    
     $('#pairs_clicked').html(memoryGame.pairsClicked )
     $('#pairs_guessed').html(memoryGame.pairsGuessed )
-   
   }
   
   if(memoryGame.isFinished()) {
@@ -70,16 +75,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
       alert('You are the champion!')
       $('#pairs_clicked').html(memoryGame.pairsClicked )
       $('#pairs_guessed').html(memoryGame.pairsGuessed )
-      $('.card').children().toggleClass('front back');
+      // $('.card').children().toggleClass('front back');
       memoryGame.shuffleCards();
+      document.querySelector('#memory_board').innerHTML = buildThePage();
+      attachEventListeners();
     }, 1000)
+    
+    
+  }
+  } //end of click listener for .card
+  });
+
+
+
+}// end of attachEventListeners function
+
+
 
   
-  //  location.reload(true)
   
-  }
-}
-});
+
 
 
 
