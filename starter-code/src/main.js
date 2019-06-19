@@ -25,7 +25,8 @@ var cards = [
   { name: 'thor',            img: 'thor.jpg' }
 ];
 var memoryGame = new MemoryGame(cards);
-
+// memoryGame.shuffleCards();
+//uncomment this^^^^^ to enable shuffling on load
 
 document.addEventListener("DOMContentLoaded", function(event) { 
   var html = '';
@@ -39,13 +40,52 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // Add all the div's to the HTML
   document.querySelector('#memory_board').innerHTML = html;
 
-  // Bind the click event of each element to a function
+  // Flip the card when clicked on
   document.querySelectorAll('.back').forEach(function(card) {
     card.onclick = function() {
       // TODO: write some code here
-      console.log('Card clicked')
+      $(this).toggleClass('back front');
+      $(this).next().toggleClass('front back')
+     
     }
   });
+  
+  //adding clicked cards to pickedcards array
+  document.querySelectorAll('.card').forEach(card => {
+    card.onclick = function() {
+    memoryGame.pickedCards.push(card);
+      
+  if(memoryGame.pickedCards.length == 2) {
+    $('.card').addClass('blocked');
+    memoryGame.checkIfPair()
+    
+    $('#pairs_clicked').html(memoryGame.pairsClicked )
+    $('#pairs_guessed').html(memoryGame.pairsGuessed )
+   
+  }
+  
+  if(memoryGame.isFinished()) {
+    setTimeout(() => {
+      memoryGame.reset();
+      alert('You are the champion!')
+      $('#pairs_clicked').html(memoryGame.pairsClicked )
+      $('#pairs_guessed').html(memoryGame.pairsGuessed )
+      $('.card').children().toggleClass('front back');
+      memoryGame.shuffleCards();
+    }, 1000)
+
+  
+  //  location.reload(true)
+  
+  }
+}
 });
+
+
+
+  
+  //end of DOMContentLoaded listener event
+});
+
 
 
